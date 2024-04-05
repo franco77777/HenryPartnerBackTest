@@ -76,11 +76,23 @@ const getFilteredProducts = async (req, res) => {
   }
 };
 
+const getPaginateProducts = async (req, res) => {
+  const limit = parseInt(req.query.limit) || 10;
+  const page = parseInt(req.query.page) || 1;
+  const name = req.query.name;
+  const products = await Product.paginate({}, { limit, page });
+  console.log(name);
+
+  // respond to the user
+  res.json(products);
+};
+
 module.exports = {
-  getProducts: getAllProducts,
+  getAllProducts,
   getProduct,
   createProduct,
   updateProduct,
   deleteProduct,
   getFilteredProducts,
+  getPaginateProducts,
 };

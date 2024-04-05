@@ -18,6 +18,16 @@ app.use("/api/products", productRoute);
 app.get("/", (req, res) => {
   res.send("Hello from Node API Server Updated");
 });
+app.get("/test", async (req, res) => {
+  // options for the pagination
+  //const options = req.query;
+
+  // find products and paginate
+  const products = await Product.paginate();
+
+  // respond to the user
+  res.json(products);
+});
 
 mongoose
   .connect(
