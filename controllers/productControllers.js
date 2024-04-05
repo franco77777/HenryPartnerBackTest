@@ -83,9 +83,8 @@ const getPaginateProducts = async (req, res) => {
   const name = req.query.name || null;
   if (!name) {
     const products = await Product.paginate({}, { limit, page });
-    console.log(name);
 
-    // respond to the user
+    console.log("products", products);
     res.json(products);
   } else {
     const products = await Product.paginate(
@@ -94,7 +93,7 @@ const getPaginateProducts = async (req, res) => {
       },
       { limit, page }
     );
-
+    //console.log(products);
     res.status(200).json(products);
   }
 };
