@@ -2,7 +2,7 @@ const Product = require("../models/productModel");
 
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find({});
+    const products = await Product.paginate();
     res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -64,7 +64,8 @@ const deleteProduct = async (req, res) => {
 const getFilteredProducts = async (req, res) => {
   try {
     const { filtered } = req.params;
-    const products = await Product.find({
+
+    const products = await Product.paginate({
       name: new RegExp("^" + filtered + "$", "i"),
     });
     if (!products) {
@@ -79,12 +80,23 @@ const getFilteredProducts = async (req, res) => {
 const getPaginateProducts = async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
   const page = parseInt(req.query.page) || 1;
-  const name = req.query.name;
-  const products = await Product.paginate({}, { limit, page });
-  console.log(name);
+  const name = req.query.name || null;
+  if (!name) {
+    const products = await Product.paginate({}, { limit, page });
+    console.log(name);
 
-  // respond to the user
-  res.json(products);
+    // respond to the user
+    res.json(products);
+  } else {
+    const products = await Product.paginate(
+      {
+        name: new RegExp("^" + name + "$", "i"),
+      },
+      { limit, page }
+    );
+
+    res.status(200).json(products);
+  }
 };
 
 module.exports = {
